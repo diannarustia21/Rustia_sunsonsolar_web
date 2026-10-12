@@ -7,7 +7,7 @@
 
     <title>Sun Son Solar</title>
 
-    <link rel="stylesheet" href="sunson.instructions.css">
+    <link rel="stylesheet" href="assets/css/sunson.css">
 </head>
 
 <body>
