@@ -2,58 +2,40 @@
 
 namespace App\Controllers;
 
-use App\Models\UserModels;
+use App\Models\UserModel;
 
-class Main extends BaseController
+class Login extends BaseController
 {
-    public function index()
+    public function authenticate()
     {
-        return view('Main')
-    }
+        $user = (new UserModel())
+            ->where('Username', trim((string) $this->request->getPost('Uname')))
+            ->where('Status', 'Active')
+            ->first();
 
-    public function register()
-    {
-        $UserModel = new UserModel();
-
-        $data = [
-            'FirstName'      => $this->request->getPost('Fname'),
-            'LastName'       => $this->request->getPost('Lname'),
-            'MiddleName'     => $this->request->getPost('Mname'),    
-            'BirthDate'      => $this->request->getPost('Bday'),
-            'Gender'         => $this->request->getPost('Gender'),
-            'PhoneNumber'    => $this->request->getPost('PhNo'),
-            'EmailAddress'   => $this->request->getPost('EmAdd'),
-            'Address'        => $this->request->getPost('Addrs'),
-            'Departments'    => $this->request->getPost('Departments'),
-            'Username'       => $this->request->getPost('Uname'),
-            'Password'       => $this->request->getPost('Pwd'),
-
-        ];
-
-        $UserModel->insert($data);
-
-        return 'Registration successful';
-    }
-
-    public function Logincon()
-    {
-        return view('Loginhome')
-    }
-
-    public function login()
-    {
-        $username = $this->request->getPost('Uname'),
-        $password = $this->request->getPost('Pwd'),
-
-        $userModel = new UserModel();
-        $user = $userModel->where('Username', $username)->first()
-
-        if ($user && password_verify($password, $user['Password'])) {
-            return 'Login successfull';
-        } else {
-            return 'Invalid username or password.';
+        if (! $user || ! password_verify((string) $this->request->getPost('Pwd'), $user['Password'])) {
+            return redirect()->to('/?page=login')->with('error', 'Invalid username or password.');
         }
 
+        session()->regenerate();
+        session()->set([
+            'user_id' => $user['ID'],
+            'name' => $user['Firstname'] . ' ' . $user['Lastname'],
+            'role' => $user['Role'],
+            'logged_in' => true
+        ]);
 
+        return redirect()->to(match ($user['Role']) {
+            'Customer' => '/customer',
+            'Technician' => '/technician',
+            default => '/admin'
+        });
+    }
+
+    public function logout()
+    {
+        session()->destroy();
+
+        return redirect()->to('/');
     }
 }

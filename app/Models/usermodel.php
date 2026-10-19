@@ -2,24 +2,12 @@
 
 namespace App\Models;
 
-use CodeIgniter\Models;
+use CodeIgniter\Model;
 
-class UserModel extends Models
+class UserModel extends Model
 {
     protected $table = 'users';
-    protected $primaryKey = 'id';
-
-    protected $allowedFields =  [
-        'FirstName'     
-        'LastName'      
-        'MiddleName'       
-        'BirthDate'      
-        'Gender'       
-        'PhoneNumber'   
-        'EmailAddress'   
-        'Address'        
-        'Departments'    
-        'Username'       
-        'Password'    
-    ];
+    protected $primaryKey = 'ID';
+    protected $returnType = 'array';
+    protected $allowedFields = ['Firstname', 'Lastname', 'Middlename', 'Birthdate', 'Gender', 'Phonenumber', 'Email', 'Address', 'Departments', 'Username', 'Password', 'Role', 'Status'];
 }
