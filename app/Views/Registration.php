@@ -14,7 +14,7 @@
     <div class="form-page">
         <div class="form-card">
             <h1>
-                🌿 Create an Account
+              Create an Account
             </h1>
 
             <p class="form-subtitle">
